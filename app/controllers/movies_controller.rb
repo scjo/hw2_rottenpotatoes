@@ -8,6 +8,11 @@ class MoviesController < ApplicationController
 
   def index
     @movies = Movie.all
+
+    if params[:sort_by]
+      @movies.sort! { |a,b| a.title.downcase <=> b.title.downcase }
+      @title_class = "hilite"
+    end
   end
 
   def new
