@@ -14,7 +14,7 @@ class MoviesController < ApplicationController
   def index
 
     @all_ratings = Movie.all_ratings
-    @header_class={}
+    @header_class = {}
 
     if params[:ratings]
       @ratings = params[:ratings]
@@ -22,14 +22,28 @@ class MoviesController < ApplicationController
       if @ratings.is_a?(Hash)
         @ratings = @ratings.keys
       end
+
+      session[:ratings] = @ratings
+    elsif session[:ratings]
+      @ratings = session[:ratings]
     end
 
-    if ["title", "rating", "release_date"].include? params[:sort_by]
-      @movies = Movie.find(:all, :order => params[:sort_by], :conditions => {:rating => @ratings})
-      @header_class[params[:sort_by].to_sym] = "hilite"
+    if params[:sort_by]
+      sort_by = params[:sort_by]
+      session[:sort_by] = sort_by
+    elsif session[:sort_by]
+      sort_by = session[:sort_by]
+    end
+
+
+    if ["title", "rating", "release_date"].include? sort_by
+      @movies = Movie.find(:all, :order => sort_by, :conditions => {:rating => @ratings})
+      @header_class[sort_by.to_sym] = "hilite"
+      session[:header_class] = @header_class
     else
       @movies = Movie.find(:all, :conditions => {:rating => @ratings})
     end
+
   end
 
   def new
