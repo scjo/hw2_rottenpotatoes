@@ -26,7 +26,7 @@ class MoviesController < ApplicationController
 
     if ["title", "rating", "release_date"].include? params[:sort_by]
       @movies = Movie.find(:all, :order => params[:sort_by], :conditions => {:rating => @ratings})
-      @header_class[:sort_by] = "hilite"
+      @header_class[params[:sort_by].to_sym] = "hilite"
     else
       @movies = Movie.find(:all, :conditions => {:rating => @ratings})
     end
