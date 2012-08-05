@@ -15,6 +15,7 @@ class MoviesController < ApplicationController
 
     @all_ratings = Movie.all_ratings
     @header_class = {}
+    redirect = false
 
     if params[:ratings]
       @ratings = params[:ratings]
@@ -26,6 +27,7 @@ class MoviesController < ApplicationController
       session[:ratings] = @ratings
     elsif session[:ratings]
       @ratings = session[:ratings]
+      redirect = true
     end
 
     if params[:sort_by]
@@ -33,6 +35,7 @@ class MoviesController < ApplicationController
       session[:sort_by] = sort_by
     elsif session[:sort_by]
       sort_by = session[:sort_by]
+      redirect = true
     end
 
 
@@ -42,6 +45,10 @@ class MoviesController < ApplicationController
       session[:header_class] = @header_class
     else
       @movies = Movie.find(:all, :conditions => {:rating => @ratings})
+    end
+
+    if redirect
+      redirect_to :action => "index", :sort_by => sort_by, :ratings => @ratings
     end
 
   end
